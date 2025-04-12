@@ -1,0 +1,129 @@
+# IntelliJ IDEA and other IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+target/
+bin/
+.apt_generated/
+.classpath
+.factorypath
+.project
+
+# Eclipse
+.settings/
+.metadata/
+/tmp
+/logs
+/reports
+/bin
+
+# Maven
+/target/
+/dependency-reduced-pom.xml
+/buildNumber.properties
+/.mvn/wrapper/maven-wrapper.jar.sha256
+/.mvn/wrapper/maven-wrapper.properties
+
+# Gradle
+.gradle/
+build/
+.metadata/
+.plugins/
+.settings/
+.project-ext.xml
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/build/
+/dist/
+/javadoc/
+/nbm/
+/generated-layer.xml
+/cluster.properties
+/nbactions.xml
+/manifest.mf
+/ap-source-output/
+
+# VS Code
+.vscode/
+
+# Spring Boot
+/BOOT-INF/classes/
+/META-INF/maven/
+/META-INF/resources/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_activethumb.db
+Desktop.ini
+*.log
+*.bak
+*.swp
+*.swo
+*.diff
+*.patch
+*.orig
+*.rej
+*.pyc
+*.pyo
+*.egg-info
+*.egg
+*.pth
+
+# Docker
+.dockerignore
+/target
+!mvnw
+!mvnw.cmd
+!pom.xml
+
+# Environment files
+.env
+
+# Java specific files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.gz
+
+# Temporary files
+*.tmp
+
+# Editor backups
+*~
+\#*#
+.*.un~
+.fuse_hidden*
+.nfs*
+.AppleDouble
+.LSOverride
+
+# OS X Finder
+.DocumentRevisions-V100
+.fseventsd
+
+# Kubernetes
+.kube/config
+
+# SonarLint
+.sonarlint/
+
+# Spring Tool Suite (STS)
+.sts4-cache
+
+# More generic ignores
+/node_modules
+/bower_components
+/jspm_packages
+
+### End of file ###
