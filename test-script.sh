@@ -2,28 +2,45 @@
 
 # Script to test the API endpoints in the Docker container
 
-# Subscribe the customer first
-echo "Subscribing customer 366585630..."
-curl -X POST "http://localhost:8080/api/subscribe?customerNumber=366585630"
+# NOTE: The customerNumber 318411216 is pre-configured for mocked transaction data.
+#       Use this customer number to ensure all endpoints (including transaction-data) work properly.
+
+CUSTOMER_NUMBER=318411216
+LOAN_AMOUNT=1500
+
+echo "==========================================="
+echo "Subscribing customer $CUSTOMER_NUMBER..."
+echo "==========================================="
+curl -X POST "http://localhost:8080/api/subscribe?customerNumber=$CUSTOMER_NUMBER"
 echo -e "\n"
 
-# Test customer subscription status
-echo "Testing customer status for 366585630..."
-curl "http://localhost:8080/api/loanStatus?customerNumber=366585630"
+echo "==========================================="
+echo "Testing loan status for $CUSTOMER_NUMBER..."
+echo "==========================================="
+curl "http://localhost:8080/api/loanStatus?customerNumber=$CUSTOMER_NUMBER"
 echo -e "\n"
 
-# Test loan request
-echo "Testing loan request for 366585630..."
-curl -X POST "http://localhost:8080/api/loanRequest?customerNumber=366585630&amount=1500"
+echo "==========================================="
+echo "Requesting a loan of $LOAN_AMOUNT for $CUSTOMER_NUMBER..."
+echo "==========================================="
+curl -X POST "http://localhost:8080/api/loanRequest?customerNumber=$CUSTOMER_NUMBER&amount=$LOAN_AMOUNT"
 echo -e "\n"
 
-# Test loan status after request
-echo "Testing loan status for 366585630 after loan request..."
-curl "http://localhost:8080/api/loanStatus?customerNumber=366585630"
+echo "==========================================="
+echo "Checking loan status after loan request..."
+echo "==========================================="
+curl "http://localhost:8080/api/loanStatus?customerNumber=$CUSTOMER_NUMBER"
 echo -e "\n"
 
-# Test duplicate loan request (should fail with "pending loan exists")
+echo "==========================================="
 echo "Testing duplicate loan request (should fail)..."
-curl -X POST "http://localhost:8080/api/loanRequest?customerNumber=366585630&amount=1500"
+echo "==========================================="
+curl -X POST "http://localhost:8080/api/loanRequest?customerNumber=$CUSTOMER_NUMBER&amount=$LOAN_AMOUNT"
+echo -e "\n"
+
+echo "==========================================="
+echo "Testing transaction data retrieval (mocked)..."
+echo "==========================================="
+curl "http://localhost:8080/api/transaction-data?customerNumber=$CUSTOMER_NUMBER"
 echo -e "\n"
 

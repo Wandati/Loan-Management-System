@@ -1,4 +1,4 @@
-# IntelliJ IDEA and other IDEs
+# IntelliJ IDEA
 .idea/
 *.iml
 *.iws
@@ -17,16 +17,19 @@ bin/
 /tmp
 /logs
 /reports
-/bin
 
 # Maven
 /target/
-/dependency-reduced-pom.xml
-/buildNumber.properties
-/.mvn/wrapper/maven-wrapper.jar.sha256
-/.mvn/wrapper/maven-wrapper.properties
+dependency-reduced-pom.xml
+buildNumber.properties
 
-# Gradle
+# Allow Maven Wrapper files
+!.mvn/
+!mvnw
+!mvnw.cmd
+!pom.xml
+
+# Gradle (if any)
 .gradle/
 build/
 .metadata/
@@ -38,23 +41,22 @@ build/
 
 # NetBeans
 /nbproject/private/
-/build/
-/dist/
-/javadoc/
-/nbm/
-/generated-layer.xml
-/cluster.properties
-/nbactions.xml
-/manifest.mf
-/ap-source-output/
+build/
+dist/
+javadoc/
+nbm/
+generated-layer.xml
+cluster.properties
+nbactions.xml
+manifest.mf
+ap-source-output/
 
 # VS Code
 .vscode/
 
 # Spring Boot
-/BOOT-INF/classes/
-/META-INF/maven/
-/META-INF/resources/
+BOOT-INF/
+META-INF/
 
 # OS generated files
 .DS_Store
@@ -80,15 +82,11 @@ Desktop.ini
 
 # Docker
 .dockerignore
-/target
-!mvnw
-!mvnw.cmd
-!pom.xml
 
 # Environment files
 .env
 
-# Java specific files
+# Java
 *.class
 *.jar
 *.war
@@ -121,9 +119,8 @@ Desktop.ini
 # Spring Tool Suite (STS)
 .sts4-cache
 
-# More generic ignores
-/node_modules
-/bower_components
-/jspm_packages
+# Node/Frontend junk (if any)
+node_modules/
+bower_components/
+jspm_packages/
 
-### End of file ###
