@@ -1,6 +1,6 @@
 # Loan Management System (LMS)
 
-This project implements a simplified **Loan Management System (LMS)** as part of a technical assessment. It offers a complete backend solution with RESTful APIs for customer onboarding, loan request and status tracking, and integrates (mocked) with an external scoring engine. The application is containerized using Docker for easy setup and deployment.
+This project implements a simplified **Loan Management System (LMS)** with a complete backend solution offering RESTful APIs for customer onboarding, loan request and status tracking, and integrates (mocked) with an external scoring engine. The application is containerized using Docker for easy setup and deployment.
 
 ---
 
@@ -35,6 +35,7 @@ The Loan Management System is designed to handle the complete lifecycle of a loa
 - Resilient scoring engine simulation via `WebClient` and `resilience4j`
 - Full Docker support
 - Structured exception handling and logging
+- API documentation with Swagger UI
 
 ---
 
@@ -61,6 +62,7 @@ The Loan Management System is designed to handle the complete lifecycle of a loa
 | Docker            | Containerization                         |
 | Docker Compose    | Orchestration                            |
 | Maven             | Dependency management                    |
+| Swagger UI        | API documentation                        |
 
 ---
 
@@ -79,6 +81,8 @@ docker-compose up --build -d
 ```
 
 Access the app at: `http://localhost:8080`
+
+Access Swagger UI documentation at: `http://localhost:8080/swagger-ui/index.html`
 
 ---
 
@@ -110,6 +114,12 @@ docker-compose down
 ---
 
 ## 📡 API Documentation
+
+The API is documented using Swagger UI and is accessible at:
+
+```
+http://[ip-address]:8080/swagger-ui/index.html
+```
 
 ### 1. 📥 Subscribe Customer
 
@@ -289,7 +299,6 @@ The script performs:
 - 📊 Observability with Prometheus/Grafana
 - 📜 Validation improvements
 - 🧪 Unit & integration tests
-- ☁️ Cloud readiness (AWS/GCP)
 - ⚙️ Circuit breakers and fallback responses
 
 ---
