@@ -4,6 +4,7 @@
 
 # NOTE: The customerNumber 318411216 is pre-configured for mocked transaction data.
 #       Use this customer number to ensure all endpoints (including transaction-data) work properly.
+#       You can try a different customer number to test the subscription,loan request and loan status but it wont work for transaction data 
 
 CUSTOMER_NUMBER=318411216
 LOAN_AMOUNT=1500
