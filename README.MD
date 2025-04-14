@@ -13,7 +13,7 @@ This project implements a simplified **Loan Management System (LMS)** as part of
 - [Setup and Installation](#setup-and-installation)
 - [Environment Configuration](#environment-configuration)
 - [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
+- [API Documentation](#api-documentation)
 - [Testing](#testing)
 - [Drawbacks and Limitations](#drawbacks-and-limitations)
 - [Future Improvements](#future-improvements)
@@ -25,61 +25,26 @@ This project implements a simplified **Loan Management System (LMS)** as part of
 
 The Loan Management System is designed to handle the complete lifecycle of a loan—from customer registration to loan processing and tracking. It simulates an interaction with an external scoring engine and offers a Dockerized setup for seamless local development and deployment.
 
-This system supports:
-
-- Customer onboarding and subscription.
-- Loan request creation and duplicate prevention.
-- Mock scoring engine simulation to determine loan eligibility.
-- Loan status retrieval.
-- Docker-based deployment and Postgres integration.
-
 ---
 
 ## ✅ Features
 
-### 👤 Customer Subscription
-Allows a new customer to register into the system using a unique customer number.
-
-### 💰 Loan Request
-Enables a customer to submit a loan request, specifying the desired loan amount.
-
-### 🔁 Duplicate Loan Prevention
-Prevents the same customer from submitting multiple loan applications simultaneously.
-
-### 🔍 Loan Status Tracking
-Enables a customer to check the status of their loan request at any time.
-
-### 🧪 Mock Scoring Engine
-Simulates an external scoring service to evaluate loan eligibility based on dummy transaction data.
-
-### 📦 Dockerized Setup
-Includes `Dockerfile` and `docker-compose.yml` to easily build and run the system with PostgreSQL.
-
-### ⚠️ Exception Handling
-Implements structured exception classes to handle common errors like duplicate requests or invalid customers.
+- Customer onboarding and subscription
+- Loan request creation and duplicate prevention
+- Loan status tracking
+- Resilient scoring engine simulation via `WebClient` and `resilience4j`
+- Full Docker support
+- Structured exception handling and logging
 
 ---
 
 ## 🏛️ System Architecture
 
-The system follows a **layered architecture**:
-
-1. **Controller Layer**
-   - Handles all REST API requests.
-   - Maps incoming HTTP requests to corresponding service methods.
-
-2. **Service Layer**
-   - Contains business logic such as loan processing, customer registration, scoring engine interactions.
-
-3. **Repository Layer**
-   - Uses Spring Data JPA to interact with PostgreSQL.
-   - Manages Customer and Loan entities.
-
-4. **Model Layer**
-   - Defines the domain objects like `Customer` and `Loan`.
-
-5. **Mock Integration Layer**
-   - Simulates the scoring engine and transaction history provider.
+- **Controller Layer** – Handles API requests.
+- **Service Layer** – Contains business logic.
+- **Repository Layer** – Interfaces with PostgreSQL.
+- **Model Layer** – Domain entities: `Customer`, `Loan`.
+- **Integration Layer** – Simulated external service calls with retries using `WebClient`.
 
 ---
 
@@ -90,61 +55,53 @@ The system follows a **layered architecture**:
 | Java 17           | Main programming language                |
 | Spring Boot 3.x   | Backend framework                        |
 | Spring Data JPA   | ORM layer                                |
+| WebClient         | Reactive HTTP client                     |
+| Resilience4j      | Retry, rate limiting, and circuit breaker|
 | PostgreSQL        | Relational database                      |
 | Docker            | Containerization                         |
-| Docker Compose    | Multi-container orchestration            |
-| Maven             | Build and dependency management tool     |
+| Docker Compose    | Orchestration                            |
+| Maven             | Dependency management                    |
 
 ---
 
 ## 🧰 Setup and Installation
 
-### 📋 Prerequisites
+### Prerequisites
 
-Ensure the following tools are installed:
+- Docker + Docker Compose
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
-### 📥 Clone the Repository
+### Clone and Run
 
 ```bash
 git clone <repository_url>
 cd <project_directory>
+docker-compose up --build -d
 ```
+
+Access the app at: `http://localhost:8080`
 
 ---
 
 ## ⚙️ Environment Configuration
 
-Create a `.env` file in the root of the project:
+Create a `.env` file with:
 
-```dotenv
+```env
 DB_NAME=loan_db
 DB_USERNAME=postgres
 DB_PASSWORD=your_password
 SPRING_JPA_HIBERNATE_DDL_AUTO=update
 ```
 
-Replace values with your actual database credentials.
-
 ---
 
 ## 🚀 Running the Application
-
-Use Docker Compose to start both the application and the PostgreSQL database:
 
 ```bash
 docker-compose up --build -d
 ```
 
-Once running, access the application at:
-
-```
-http://localhost:8080
-```
-
-To stop the application:
+To stop:
 
 ```bash
 docker-compose down
@@ -152,64 +109,188 @@ docker-compose down
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Documentation
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/subscribe?customerNumber={customerNumber}` | Registers a new customer |
-| `POST` | `/api/loanRequest?customerNumber={customerNumber}&amount={amount}` | Requests a new loan |
-| `GET`  | `/api/loanStatus?customerNumber={customerNumber}` | Checks the current loan status |
-| `GET`  | `/api/transaction-data?customerNumber={customerNumber}` | Provides mocked transaction data |
+### 1. 📥 Subscribe Customer
+
+**POST** `/api/subscribe?customerNumber={customerNumber}`
+
+Registers a customer into the system.
+
+#### Query Parameters
+
+| Name            | Type   | Required | Description           |
+|-----------------|--------|----------|-----------------------|
+| `customerNumber`| String | ✅       | Unique customer ID    |
+
+#### Example Request
+
+```http
+POST /api/subscribe?customerNumber=CUST001
+```
+
+#### Success Response
+
+```json
+{
+  "message": "Customer subscribed successfully",
+  "customerNumber": "CUST001"
+}
+```
+
+**Status:** `201 Created`
+
+#### Error Responses
+
+- `400 Bad Request`: Missing or malformed parameter.
+- `409 Conflict`: Customer already exists.
+
+---
+
+### 2. 💸 Request Loan
+
+**POST** `/api/loanRequest?customerNumber={customerNumber}&amount={amount}`
+
+Initiates a loan request for a customer.
+
+#### Query Parameters
+
+| Name            | Type    | Required | Description           |
+|-----------------|---------|----------|-----------------------|
+| `customerNumber`| String  | ✅       | Customer ID           |
+| `amount`        | Decimal | ✅       | Loan amount requested |
+
+#### Example Request
+
+```http
+POST /api/loanRequest?customerNumber=CUST001&amount=10000
+```
+
+#### Success Response
+
+```json
+{
+  "loanId": "1",
+  "customerNumber": "CUST001",
+  "amount": 10000,
+  "status": "PENDING"
+}
+```
+
+**Status:** `201 Created`
+
+#### Error Responses
+
+- `404 Not Found`: Customer does not exist.
+- `409 Conflict`: Existing active loan already in progress.
+
+---
+
+### 3. 🔍 Get Loan Status
+
+**GET** `/api/loanStatus?customerNumber={customerNumber}`
+
+Returns the status of the customer's most recent loan.
+
+#### Query Parameters
+
+| Name            | Type   | Required | Description           |
+|-----------------|--------|----------|-----------------------|
+| `customerNumber`| String | ✅       | Customer ID           |
+
+#### Example Request
+
+```http
+GET /api/loanStatus?customerNumber=CUST001
+```
+
+#### Success Response
+
+```json
+{
+  "loanId": "1",
+  "status": "APPROVED"
+}
+```
+
+**Status:** `200 OK`
+
+#### Error Response
+
+- `404 Not Found`: No loan found for the customer.
+
+---
+
+### 4. 📊 Get Transaction Data
+
+**GET** `/api/transaction-data?customerNumber={customerNumber}`
+
+Provides dummy transaction data from the mock scoring engine.
+
+#### Query Parameters
+
+| Name            | Type   | Required | Description           |
+|-----------------|--------|----------|-----------------------|
+| `customerNumber`| String | ✅       | Customer ID           |
+
+#### Example Response
+
+```json
+{
+  "customerNumber": "CUST001",
+  "transactions": [
+    {
+      "date": "2024-04-01",
+      "amount": 1000,
+      "type": "credit"
+    },
+    {
+      "date": "2024-04-03",
+      "amount": 500,
+      "type": "debit"
+    }
+  ]
+}
+```
+
+**Status:** `200 OK`
 
 ---
 
 ## 🧪 Testing
 
-A bash script is provided to simulate an end-to-end test:
-
-### 🧾 Test Script Usage
-
-1. Make the script executable:
-
 ```bash
 chmod +x testscript.sh
-```
-
-2. Run the script:
-
-```bash
 ./testscript.sh
 ```
 
-### ✅ What It Does
+The script performs:
 
-- Registers a new customer.
-- Submits a loan request.
-- Checks the loan status.
-- Validates prevention of duplicate loan requests.
+- Subscription
+- Loan request
+- Status check
+- Duplicate prevention validation
 
 ---
 
 ## ⚠️ Drawbacks and Limitations
 
-- **Mocked Services:** The scoring engine and core banking integrations are currently mocked. Real implementations would require secure SOAP/REST integration.
-- **No Security:** Lacks authentication/authorization (e.g., OAuth2, JWT).
-- **Minimal Validation:** Input validation is basic and should be hardened for production.
-- **Limited Error Handling:** Needs more granular exception flows and logging.
-- **Single Node Deployment:** Not optimized for high availability or load balancing.
-- **Missing Monitoring:** No metrics or health checks are included.
+- Scoring engine and bank integrations are mocked due to API unreachability
+- No security layer (JWT/OAuth)
+- Basic input validation
+- No observability tools (metrics/logs visualization)
 
 ---
 
 ## 🚧 Future Improvements
 
-- 🔐 **Add Security** – Implement authentication and authorization (JWT or OAuth2).
-- 📉 **Real Scoring Engine Integration** – Replace mock scoring with live scoring API.
-- 🧼 **Improve Validation** – Enhance request validations with annotations and custom logic.
-- 🧪 **Expand Testing** – Add unit and integration test coverage.
-- 📈 **Monitoring and Metrics** – Integrate Prometheus, Grafana, or Spring Boot Actuator.
-- ☁️ **Cloud Readiness** – Prepare for deployment to cloud environments like AWS or GCP.
-- ♻️ **Transactional Safety** – Improve transaction management with isolation and rollback support.
+- ✅ Add auth layer (JWT, OAuth2)
+- 🔁 Real external API integration
+- 📊 Observability with Prometheus/Grafana
+- 📜 Validation improvements
+- 🧪 Unit & integration tests
+- ☁️ Cloud readiness (AWS/GCP)
+- ⚙️ Circuit breakers and fallback responses
 
 ---
 
@@ -217,6 +298,5 @@ chmod +x testscript.sh
 
 **Marvin Wandati**
 
-Feel free to reach out with any questions or suggestions!
-
-
+Connect on [LinkedIn](https://www.linkedin.com/in/marvin-wandati)  
+GitHub: [@Wandati](https://github.com/Wandati)

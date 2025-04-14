@@ -1,26 +1,35 @@
 package com.credable.lms.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/transaction-data")
+@Tag(name = "Transaction Data Controller", description = "API to retrieve mock transaction data")
 public class TransactionDataController {
 
     @GetMapping
-    public List<Object> getTransactionData(@RequestParam String customerNumber) {
-        // TODO: Replace with actual SOAP call to CORE Banking System
-        // and data transformation
+    @Operation(
+        summary = "Get mock transaction data",
+        description = "Retrieves mock transaction data for the given customer number"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Transaction data retrieved successfully")
+    })
+    public List<Object> getTransactionData(
+            @Parameter(description = "Customer number for which to fetch transaction data", example = "318411216")
+            @RequestParam String customerNumber) {
         return createMockTransactionData(customerNumber);
     }
 
     private List<Object> createMockTransactionData(String customerNumber) {
-        // Replace with mock data as per the document
         List<Object> mockData = new ArrayList<>();
         if (customerNumber.equals("318411216")) {
             mockData.add(createMockTransaction1());

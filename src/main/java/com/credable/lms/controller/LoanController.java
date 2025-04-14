@@ -6,6 +6,9 @@ import com.credable.lms.exception.LoanRejectionException;
 import com.credable.lms.model.Loan;
 import com.credable.lms.repository.LoanRepository;
 import com.credable.lms.service.LoanProcessingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +17,20 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Loan", description = "Endpoints for loan processing and status checking")
 public class LoanController {
+
     @Autowired
     private LoanRepository loanRepository;
-    
+
     @Autowired
     private LoanProcessingService loanProcessingService;
 
     @PostMapping("/loanRequest")
-    public ResponseEntity<String> requestLoan(@RequestParam String customerNumber,
-                                             @RequestParam Double amount) {
+    @Operation(summary = "Request a loan", description = "Initiates a loan request for a given customer and amount")
+    public ResponseEntity<String> requestLoan(
+            @Parameter(description = "Customer number", required = true) @RequestParam String customerNumber,
+            @Parameter(description = "Loan amount", required = true) @RequestParam Double amount) {
         try {
             String result = loanProcessingService.processLoanRequest(customerNumber, amount);
             return ResponseEntity.ok(result);
@@ -34,13 +41,15 @@ public class LoanController {
         } catch (LoanRejectionException e) {
             return ResponseEntity.ok("Loan request submitted successfully but was REJECTED after scoring.");
         } catch (Exception e) {
-            // Generic error handling
             return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
         }
     }
 
     @GetMapping("/loanStatus")
-    public ResponseEntity<?> getLoanStatus(@RequestParam String customerNumber) {
+    @Operation(summary = "Check loan status", description = "Fetches the most recent loan status of a customer")
+    public ResponseEntity<?> getLoanStatus(
+            @Parameter(description = "Customer number to fetch loan status", required = true)
+            @RequestParam String customerNumber) {
         Optional<Loan> loanOpt = loanRepository.findTopByCustomerNumberOrderByCreatedAtDesc(customerNumber);
         if (loanOpt.isEmpty()) {
             return ResponseEntity.ok("No loan found for this customer.");
@@ -49,3 +58,4 @@ public class LoanController {
         return ResponseEntity.ok("Loan status: " + loan.getStatus());
     }
 }
+
