@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
 
-RUN apk update && apk upgrade
+RUN apk update && apk add --no-cache libexpat && apk upgrade libexpat
 
 WORKDIR /workspace/app
 
