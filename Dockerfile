@@ -1,4 +1,7 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
+
+RUN RUN apk update && apk upgrade
+
 WORKDIR /workspace/app
 
 # Copy Maven wrapper and pom.xml
