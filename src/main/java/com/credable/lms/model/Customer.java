@@ -16,11 +16,20 @@ public class Customer {
     @Column(nullable = false)
     private String status = "ACTIVE";  // ACTIVE, LOAN_PENDING, LOAN_GRANTED, etc.
 
+    @Column(nullable = false)
+    private String name;
+
     public Customer() {}
 
     public Customer(String customerNumber) {
         this.customerNumber = customerNumber;
         this.status = "ACTIVE";
+    }
+
+    public Customer(String customerNumber, String name, String status) {
+        this.customerNumber = customerNumber;
+        this.name = name;
+        this.status = status;
     }
 
     // Getters and Setters
@@ -43,6 +52,14 @@ public class Customer {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
