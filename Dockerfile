@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
 
-RUN RUN apk update && apk upgrade
+RUN apk update && apk upgrade
 
 WORKDIR /workspace/app
 
