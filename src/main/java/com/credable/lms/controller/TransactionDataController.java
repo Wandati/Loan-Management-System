@@ -6,29 +6,43 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api/transaction-data")
+@RequestMapping("/api")
 @Tag(name = "Transaction Data Controller", description = "API to retrieve mock transaction data")
 public class TransactionDataController {
-
-    @GetMapping
+    
+    @GetMapping("/transaction-data")
     @Operation(
-        summary = "Get mock transaction data",
-        description = "Retrieves mock transaction data for the given customer number"
+        summary = "Get mock transaction data by parameter",
+        description = "Retrieves mock transaction data for the given customer number using query parameter"
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Transaction data retrieved successfully")
     })
     public List<Object> getTransactionData(
-            @Parameter(description = "Customer number for which to fetch transaction data", example = "318411216")
+            @Parameter(description = "Customer number for which to fetch transaction data", required = true, example = "318411216")
             @RequestParam String customerNumber) {
         return createMockTransactionData(customerNumber);
     }
-
+    
+    @GetMapping("/transaction-data/{customerNumber}")
+    @Operation(
+        summary = "Get mock transaction data by path variable",
+        description = "Retrieves mock transaction data for the given customer number using path variable"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Transaction data retrieved successfully")
+    })
+    public List<Object> getTransactionDataByPath(
+            @Parameter(description = "Customer number for which to fetch transaction data", required = true, example = "318411216")
+            @PathVariable String customerNumber) {
+        return createMockTransactionData(customerNumber);
+    }
     private List<Object> createMockTransactionData(String customerNumber) {
         List<Object> mockData = new ArrayList<>();
         if (customerNumber.equals("318411216")) {
