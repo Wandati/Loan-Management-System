@@ -22,6 +22,10 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 # Run stage
 FROM eclipse-temurin:17-jre-alpine
+
+# Upgrade libexpat to fix CVE-2024-8176
+RUN apk update && apk upgrade libexpat
+
 VOLUME /tmp
 ARG DEPENDENCY=/workspace/app/target/dependency
 
