@@ -1,4 +1,4 @@
-package com.credable.lms.controller;
+package com.credable.lms.controller.v1;
 
 import com.credable.lms.dto.CustomerDto;
 import com.credable.lms.model.Customer;
@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @Tag(name = "Subscription Controller", description = "API for customer subscription management")
 public class SubscriptionController {
 

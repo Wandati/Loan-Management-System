@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface LoanRepository extends JpaRepository<Loan, Long> {
     Optional<Loan> findTopByCustomerNumberOrderByCreatedAtDesc(String customerNumber);
     boolean existsByCustomerNumberAndStatus(String customerNumber, String status);
+    
 }
 

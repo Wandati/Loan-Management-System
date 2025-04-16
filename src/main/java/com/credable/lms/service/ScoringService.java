@@ -38,7 +38,7 @@ public class ScoringService {
 
         // Simulate calling our own transaction data endpoint
         // In a real scenario, the Scoring Engine would call this.
-        String transactionDataUrl = "http://localhost:8080/api/transaction-data?customerNumber=" + token.substring(11); // Extract customerNumber from token
+        String transactionDataUrl = "http://localhost:8080/api/v1/transaction-data?customerNumber=" + token.substring(11); // Extract customerNumber from token
         restTemplate.getForObject(transactionDataUrl, Object.class);
 
         // Simulate a real score on final attempt
