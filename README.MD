@@ -123,7 +123,8 @@ http://[ip-address]:8080/swagger-ui/index.html
 
 ### 1. 📥 Subscribe Customer
 
-**POST** `/api/subscribe?customerNumber={customerNumber}`
+**POST** /api/subscribe-params?customerNumber={customerNumber}&name={customerName}
+
 
 Registers a customer into the system.
 
@@ -132,11 +133,13 @@ Registers a customer into the system.
 | Name            | Type   | Required | Description           |
 |-----------------|--------|----------|-----------------------|
 | `customerNumber`| String | ✅       | Unique customer ID    |
+| `customerName`  | String | ✅       | Unique customer name  | 
+
 
 #### Example Request
 
 ```http
-POST /api/subscribe?customerNumber=CUST001
+POST /api/subscribe-params?customerNumber=318411216&name=TestUser
 ```
 
 #### Success Response
@@ -144,8 +147,10 @@ POST /api/subscribe?customerNumber=CUST001
 ```json
 {
   "message": "Customer subscribed successfully",
-  "customerNumber": "CUST001"
+  "customerNumber": "318411216",
+  "customerName": "TestUser"
 }
+
 ```
 
 **Status:** `201 Created`
@@ -173,7 +178,8 @@ Initiates a loan request for a customer.
 #### Example Request
 
 ```http
-POST /api/loanRequest?customerNumber=CUST001&amount=10000
+POST /api/loanRequest?customerNumber=318411216&amount=1500
+
 ```
 
 #### Success Response
@@ -181,10 +187,11 @@ POST /api/loanRequest?customerNumber=CUST001&amount=10000
 ```json
 {
   "loanId": "1",
-  "customerNumber": "CUST001",
-  "amount": 10000,
+  "customerNumber": "318411216",
+  "amount": 1500,
   "status": "PENDING"
 }
+
 ```
 
 **Status:** `201 Created`
@@ -211,7 +218,8 @@ Returns the status of the customer's most recent loan.
 #### Example Request
 
 ```http
-GET /api/loanStatus?customerNumber=CUST001
+GET GET /api/loanStatus?customerNumber=318411216
+
 ```
 
 #### Success Response
@@ -221,6 +229,8 @@ GET /api/loanStatus?customerNumber=CUST001
   "loanId": "1",
   "status": "APPROVED"
 }
+
+
 ```
 
 **Status:** `200 OK`
@@ -247,7 +257,7 @@ Provides dummy transaction data from the mock scoring engine.
 
 ```json
 {
-  "customerNumber": "CUST001",
+  "customerNumber": "318411216",
   "transactions": [
     {
       "date": "2024-04-01",
@@ -261,6 +271,8 @@ Provides dummy transaction data from the mock scoring engine.
     }
   ]
 }
+
+
 ```
 
 **Status:** `200 OK`
@@ -287,7 +299,6 @@ The script performs:
 
 - Scoring engine and bank integrations are mocked due to API unreachability
 - No security layer (JWT/OAuth)
-- Basic input validation
 - No observability tools (metrics/logs visualization)
 
 ---
@@ -297,8 +308,6 @@ The script performs:
 - ✅ Add auth layer (JWT, OAuth2)
 - 🔁 Real external API integration
 - 📊 Observability with Prometheus/Grafana
-- 📜 Validation improvements
-- 🧪 Unit & integration tests
 - ⚙️ Circuit breakers and fallback responses
 
 ---
