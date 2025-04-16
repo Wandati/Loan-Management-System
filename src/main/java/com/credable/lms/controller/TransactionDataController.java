@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @Tag(name = "Transaction Data Controller", description = "API to retrieve mock transaction data")
 public class TransactionDataController {
     
@@ -43,6 +43,7 @@ public class TransactionDataController {
             @PathVariable String customerNumber) {
         return createMockTransactionData(customerNumber);
     }
+    
     private List<Object> createMockTransactionData(String customerNumber) {
         List<Object> mockData = new ArrayList<>();
         if (customerNumber.equals("318411216")) {
